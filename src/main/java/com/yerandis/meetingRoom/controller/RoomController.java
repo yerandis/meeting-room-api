@@ -27,7 +27,6 @@ import java.util.UUID;
 public class RoomController {
 
     private static final Set<String> SORT_FIELDS = Set.of("name", "capacity", "createdAt");
-
     private final RoomService roomService;
 
     public RoomController(RoomService roomService) {
