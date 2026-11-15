@@ -11,6 +11,7 @@ import com.yerandis.meetingRoom.exception.ResourceNotFoundException;
 import com.yerandis.meetingRoom.mapper.ReservationMapper;
 import com.yerandis.meetingRoom.repository.ReservationRepository;
 import com.yerandis.meetingRoom.repository.RoomRepository;
+import com.yerandis.meetingRoom.specification.ReservationSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,8 +50,9 @@ public class ReservationServiceImpl implements ReservationService {
                     "La fecha de finalización debe ser posterior a la de inicio"
             );
         }
-        Page<Reservation> reservations = reservationRepository.searchReservations(
-                normalizeSearch(search), roomId, startTime, endTime, pageable
+        Page<Reservation> reservations = reservationRepository.findAll(
+                ReservationSpecifications.filter(normalizeSearch(search), roomId, startTime, endTime),
+                pageable
         );
         return new PageResponse<>(reservations.map(reservationMapper::toResponse));
     }

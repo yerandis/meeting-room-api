@@ -10,6 +10,7 @@ import com.yerandis.meetingRoom.mapper.RoomMapper;
 import com.yerandis.meetingRoom.repository.RoomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,11 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<RoomResponse> findAll(String search, Pageable pageable) {
-        Page<Room> rooms = roomRepository.searchRooms(normalizeSearch(search), pageable);
+        String term = normalizeSearch(search);
+        Specification<Room> spec = (root, query, cb) -> term == null
+                ? cb.conjunction()
+                : cb.like(cb.lower(root.get("name")), "%" + term.toLowerCase() + "%");
+        Page<Room> rooms = roomRepository.findAll(spec, pageable);
         return new PageResponse<>(rooms.map(roomMapper::toResponse));
     }
 
