@@ -50,13 +50,13 @@ public class GlobalExceptionHandler {
                 .stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        fe -> fe.getDefaultMessage() != null ? fe.getDefaultMessage() : "Valor inválido",
+                        fe -> fe.getDefaultMessage() != null ? fe.getDefaultMessage() : "Valor invalido",
                         (a, b) -> a
                 ));
 
         return ResponseEntity
                 .badRequest()
-                .body(new ApiResponse<>(false, "Error de validación", errors, Instant.now()));
+                .body(new ApiResponse<>(false, "Error de validacion", errors, Instant.now()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiResponse<Void>> handleConstraint(ConstraintViolationException ex) {
         return ResponseEntity.badRequest()
-                .body(ApiResponse.error("Parámetros inválidos: " + ex.getMessage()));
+                .body(ApiResponse.error("Parametros invalidos: " + ex.getMessage()));
     }
 
     @ExceptionHandler({
@@ -81,6 +81,6 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ApiResponse<Void>> handleBadRequest(Exception ex) {
         return ResponseEntity.badRequest()
-                .body(ApiResponse.error("Solicitud inválida: revisa el formato de los parámetros o del cuerpo"));
+                .body(ApiResponse.error("Solicitud invalida: revisa el formato de los parametros o del cuerpo"));
     }
 }
